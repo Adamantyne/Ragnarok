@@ -4,15 +4,15 @@ using Photon.Realtime;
 
 public class PhotonManager : MonoBehaviourPunCallbacks //utiliza uma classe especial do photon para ter retorno de chamadas
 {
-    //Quantidade máxima de jogadores na sala de jogo
+    //Quantidade mï¿½xima de jogadores na sala de jogo
     public int QtdMaximaJogadores;
-    // (singleton) - garante a existência de apenas uma instância dessa classe, mantendo um ponto global de acesso ao seu objeto.
+    // (singleton) - garante a existï¿½ncia de apenas uma instï¿½ncia dessa classe, mantendo um ponto global de acesso ao seu objeto.
     public static PhotonManager instance;
 
     //Define o nome da sala de jogo
     public string nomeSala = "MMORPG";
 
-    //Este método é chamado quando o script está sendo carregado
+    //Este mï¿½todo ï¿½ chamado quando o script estï¿½ sendo carregado
     void Awake()
     {
         if (instance != null && instance != this)
@@ -23,13 +23,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks //utiliza uma classe espe
             DontDestroyOnLoad(gameObject);
         }
     }
-    //Este método é chamado quando o script é executado antes de de qualquer método de atualização ser chamado pela primeira vez
+    //Este mï¿½todo ï¿½ chamado quando o script ï¿½ executado antes de de qualquer mï¿½todo de atualizaï¿½ï¿½o ser chamado pela primeira vez
     public void Conectar()
     {
         // conecta-se ao servidor
         PhotonNetwork.ConnectUsingSettings();
     }
-    //Função chamada toda vez que o jogador se conecta no servidor
+    //Funï¿½ï¿½o chamada toda vez que o jogador se conecta no servidor
     public override void OnConnectedToMaster()
     {
         Debug.Log("Conectado ao servidor!");
@@ -49,14 +49,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks //utiliza uma classe espe
     }
     public override void OnJoinedRoom()
     {
-        foreach (var player in PhotonNetwork.PlayerList)
+        foreach(var player in PhotonNetwork.PlayerList)
         {
-            if (player.NickName == PlayfabLogin.PFL.NickName)
-                photonView.RPC("DesconectarJogador", RpcTarget.MasterClient, player);
+            if(player.NickName == PlayfabLogin.PFL.NickName)
+                photonView.RPC("DesconectarJogador",RpcTarget.MasterClient, player);
         }
         PhotonNetwork.NickName = PlayfabLogin.PFL.NickName;
         Debug.Log("Entrou na sala: " + PhotonNetwork.CurrentRoom.Name);
-        photonView.RPC("CarregaCena", PhotonNetwork.LocalPlayer, "Mundo");
+        photonView.RPC("CarregaCena",PhotonNetwork.LocalPlayer,"Mundo");
     }
 
     private void DesconectarJogador(Player player)

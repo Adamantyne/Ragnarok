@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1733293936434667187}
   - component: {fileID: 2823284958673292807}
   m_Layer: 0
-  m_Name: PotionHp10
+  m_Name: ItemPocaoVida10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

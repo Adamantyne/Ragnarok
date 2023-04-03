@@ -560,7 +560,10 @@ MonoBehaviour:
   TituloTXT: {fileID: 5272531474671215090}
   DescricaoQuestTXT: {fileID: 5272531473830947703}
   RecompensaTXT: {fileID: 5272531474469977119}
-  recompensas: []
+  recompensas:
+  - {fileID: 1733293936434667185, guid: 9221b80672035844183d65b60d318f3e, type: 3}
+  - {fileID: 1733293936434667185, guid: 9221b80672035844183d65b60d318f3e, type: 3}
+  - {fileID: 7282078154946018868, guid: e58002480d9f75241954df172912a5f6, type: 3}
 --- !u!114 &5272531473745861858
 MonoBehaviour:
   m_ObjectHideFlags: 0
