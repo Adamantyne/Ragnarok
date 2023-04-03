@@ -9,10 +9,12 @@ using Photon.Realtime;
 public class PlayerController : MonoBehaviourPun
 {
     [Header ("Dados do jogador")]
-    [HideInInspector] public bool Morto = false; //controla se o jogador está morto
+    [HideInInspector] public bool Morto = false; //controla se o jogador estï¿½ morto
     private float velMover = 4f; //velocidade de movimento atual do personagem
     private float MoveX;  //valor de movimento no eixos x
     private float MoveY; //valor de movimento no eixo y
+    private int Xp = 0;
+    public int Level;
     public float VidaAtual; //controla a vida atual do jogador
     public float VidaMaxima; //controla a vida maxima do jogador
     public Player photonPlayer;
@@ -25,11 +27,19 @@ public class PlayerController : MonoBehaviourPun
     public GameObject barraVida; //objeto da interface para mostrar a vida do jogador
     public GameObject CanvaUI; //canvas com nome e barra de vida do jogador
     public SpriteRenderer imgJogador;
-    public TextMeshProUGUI nomeJogadorTxt; //Nome de identificação do jogador
-    private Animator animator; //componente responsável pela animação do jogador
-    private Rigidbody2D corpo; //controla a física do jogador
+    public TextMeshProUGUI nomeJogadorTxt; //Nome de identificaï¿½ï¿½o do jogador
+    public TextMeshProUGUI LevelJogadorTxt; //Nome de identificaï¿½ï¿½o do jogador
+    private Animator animator; //componente responsï¿½vel pela animaï¿½ï¿½o do jogador
+    private Rigidbody2D corpo; //controla a fï¿½sica do jogador
+    public AudioSource steps1;
+    public AudioSource atack1;
+    
+    public GameObject InventarioPrefab;
+    public Inventario InventarioJogador;
 
-    public GameObject minhaCamera; //Objeto da camera que deverá ser desligado se não for localplayer
+    private bool audioPlaing = false;
+
+    public GameObject minhaCamera; //Objeto da camera que deverï¿½ ser desligado se nï¿½o for localplayer
 
     public static PlayerController meuHeroi; //Pega o heroi do jogador
 
@@ -50,16 +60,19 @@ public class PlayerController : MonoBehaviourPun
 
         VidaAtual = VidaMaxima = 100;
         nomeJogadorTxt.text = player.NickName;
+        LevelJogadorTxt.text = "Lv "+this.Level.ToString();
 
         photonView.RPC ("AtualizaBarraVida", RpcTarget.All, VidaAtual);
-
-        if (player.IsLocal)
-            meuHeroi = this;
+    
+       if(player.IsLocal)
+        {
+            meuHeroi = this;          
+            GameObject inv = Instantiate(InventarioPrefab);
+            InventarioJogador = inv.GetComponentInChildren<Inventario>();
+        }            
         else
             corpo.isKinematic = true;
-
     }
-
 
     void Update ()
     {
@@ -75,53 +88,91 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        if (!Morto) photonView.RPC ("Mover", RpcTarget.All); // Executa o método responsável por mover o personagem
+        if (!Morto) photonView.RPC ("Mover", RpcTarget.All); // Executa o mï¿½todo responsï¿½vel por mover o personagem
     }
 
     public void Entradas ()
     {
-        MoveX = Input.GetAxisRaw ("Horizontal"); //Define o quanto de movimento o jogador irá executar no eixo horizontal        
-        MoveY = Input.GetAxisRaw ("Vertical"); //Define o quanto de movimento o jogador irá executar no eixo vertical
-        if (Input.GetMouseButtonDown (0)) //Verifica se o jogador clicou com o botão esquerdo mouse para atacar
+        MoveX = Input.GetAxisRaw ("Horizontal"); //Define o quanto de movimento o jogador irï¿½ executar no eixo horizontal        
+        MoveY = Input.GetAxisRaw ("Vertical"); //Define o quanto de movimento o jogador irï¿½ executar no eixo vertical
+        if (Input.GetMouseButtonDown (0)) //Verifica se o jogador clicou com o botï¿½o esquerdo mouse para atacar
         {
             photonView.RPC("Atacar",RpcTarget.All);
         }
     }
 
     [PunRPC]
-    public void Atacar ()
+    public void Atacar()
     {
-        animator.SetTrigger ("Attack"); //Executa a animação de ataque
+        int ataqueAdicional = Level*5;
+        float AtaqueTotal = poderAtaque + ataqueAdicional;
+        animator.SetTrigger("Attack"); //Executa a animaï¿½ï¿½o de ataque
+        photonView.RPC("ExecutarAudio",RpcTarget.All,"atack1");
 
-        // Calcula a direção do ataque
-        Vector3 direcao = (Input.mousePosition - Camera.main.WorldToScreenPoint (transform.position)).normalized;
+        // Calcula a direï¿½ï¿½o do ataque
+        Vector3 direcao = (Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position)).normalized;
 
-        // dispara um raio na direção do ponteiro do mouse
-        RaycastHit2D hit = Physics2D.Raycast (transform.position + direcao, direcao, alcanceAtaque);
+        // dispara um raio na direï¿½ï¿½o do ponteiro do mouse
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + direcao, direcao, alcanceAtaque);
 
         // verifica se acertou um inimigo
-        //VAMOS TRATAR ESSA PARTE DO CÓDIGO QUANDO O JOGADOR ACERTAR O INIMIGO (Continuação na próxima etapa)
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Inimigo"))
+        {
+            // causa dano ao inimigo
+            Inimigo inimigo = hit.collider.gameObject.GetComponent<Inimigo>();
+            if (!inimigo.Morto)
+                inimigo.photonView.RPC("RecebeDano", RpcTarget.MasterClient, AtaqueTotal, PhotonNetwork.LocalPlayer);
+        }
 
+    }
+
+    public void GanharXp(int XpGanho)
+    {
+        this.Xp += XpGanho;
+        if (this.Xp >= 100)
+        {
+            this.Xp -= 100;
+            Evoluir();
+        }
+    }
+
+    public void Evoluir()
+    {
+        this.Level += 1;
+        Debug.Log(Level);
+        LevelJogadorTxt.text = "Lv "+this.Level.ToString();
     }
 
     [PunRPC]
     public void Mover ()
     {
-        //Executa a animação de Andar caso velocidade seja diferente de zero
+        //Executa a animaï¿½ï¿½o de Andar caso velocidade seja diferente de zero
         animator.SetBool ("Running", (corpo.velocity.x != 0 || corpo.velocity.y != 0));
 
-        //Ajusta o visual conforme a direção do personagem
+        //Ajusta o visual conforme a direï¿½ï¿½o do personagem
         if (MoveX > 0)
         {
-            photonView.RPC ("AjustaUI", RpcTarget.All, 1f, 0.01f);
+            photonView.RPC ("AjustaUI", RpcTarget.All, 1f, 0.003f);
         }
         else if (MoveX < 0)
         {
-            photonView.RPC ("AjustaUI", RpcTarget.All, -1f, -0.01f);
+            photonView.RPC ("AjustaUI", RpcTarget.All, -1f, -0.003f);
         }
 
         //efetua o movimento do personagem
         corpo.velocity = new Vector2 (MoveX, MoveY) * velMover;
+
+        if(corpo.velocity.x != 0 || corpo.velocity.y != 0){
+            if(this.audioPlaing == false){
+                photonView.RPC("ExecutarAudio",RpcTarget.All,"steps1");
+                this.audioPlaing = true;
+            }    
+        }else{
+            if(this.audioPlaing == true){
+                photonView.RPC("PararAudio",RpcTarget.All,"steps1");
+                this.audioPlaing = false;
+            }
+        }
     }
 
     [PunRPC]
@@ -137,4 +188,81 @@ public class PlayerController : MonoBehaviourPun
         barraVida.transform.localScale = new Vector3 (vida / VidaMaxima, 1, 1);
     }
 
+    [PunRPC]
+    void RecebeDano(float dano)
+    {
+        VidaAtual -= dano;
+
+        if (VidaAtual > 0)
+        {
+            photonView.RPC("GerarEfeitoDanoRecebido", RpcTarget.All);
+            photonView.RPC("AtualizaBarraVida", RpcTarget.All, VidaAtual);
+        }
+        else
+        {
+            VidaAtual = 0;
+            photonView.RPC("AtualizaBarraVida", RpcTarget.All, VidaAtual);
+            Morte();
+        }
+    }
+
+    [PunRPC]
+    void GerarEfeitoDanoRecebido()
+    {
+        StartCoroutine(EfeitoDano());
+
+        IEnumerator EfeitoDano()
+        {
+            imgJogador.color = Color.red;
+            yield return new WaitForSeconds(0.05f);
+            imgJogador.color = Color.white;
+        }
+    }
+
+    private void Morte()
+    {
+        if(this.Level>1)this.Level-=1;
+        Morto = true;
+        //desativa os efeitos de fï¿½sica para o jogador impedindo de se mover
+        corpo.isKinematic = true;
+        corpo.velocity = Vector3.zero;
+        StartCoroutine("Reviver");
+
+    }
+
+    IEnumerator Reviver()
+    {
+        LevelJogadorTxt.text = "Lv "+this.Level.ToString();
+        yield return new WaitForSeconds(2);
+
+        Morto = false;
+        corpo.isKinematic = false;
+        corpo.position = CreatePlayer.instance.spawnPoints[Random.Range(0, CreatePlayer.instance.spawnPoints.Length)].position;
+
+        VidaAtual = VidaMaxima;
+
+        photonView.RPC("AtualizaBarraVida", RpcTarget.All, VidaAtual);
+    }
+
+    [PunRPC]
+    public void Curar(int valorCura)
+    {
+        VidaAtual = Mathf.Clamp(VidaAtual + valorCura,0,VidaMaxima);
+        PlayfabLogin.PFL.SalvaDadosJogador("VidaAtual",VidaAtual.ToString());
+        PlayerPrefs.SetString("VidaAtual",VidaAtual.ToString());
+        photonView.RPC("AtualizaBarraVida",RpcTarget.All,VidaAtual);
+    }
+    
+    [PunRPC]
+    public void ExecutarAudio(string som)
+    {
+        if(som == "steps1") steps1.Play();
+        if(som == "atack1") atack1.Play();
+    } 
+
+    [PunRPC]
+    public void PararAudio(string som)
+    {
+        if(som == "steps1") steps1.Pause();
+    } 
 }

@@ -43,6 +43,26 @@ MonoBehaviour:
   - InicializaJogador
   - Mover
   - CarregaCena
+  - AjustaInimigo
+  - AnimaAtaqueInimigo
+  - AtualizaVidaInimigo
+  - GerarEfeitoDano
+  - InicializaInimigo
+  - MorteRede
+  - RecebeDano
+  - AdicionarInimigo
+  - CriaInimigo
+  - GerarEfeitoDanoRecebido
+  - RetirarInimigo
+  - Log
+  - Curar
+  - ExecutarAudio
+  - PararAudio
+  - ConcederRecompensa
+  - AdicionaQuest
+  - ConstruirQuest
+  - ExibirCanvasQuest
+  - AnunciaMorte
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

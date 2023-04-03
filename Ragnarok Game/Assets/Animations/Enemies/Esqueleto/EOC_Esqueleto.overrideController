@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: EOC_Esqueleto
+  m_Controller: {fileID: 9100000, guid: e64a212284c9092419061d120fb9d189, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: e788283175960994ca98a38e75cf2fc2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c36626327088d734093fed69e8bdf3a1, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f4e3b64e022d9cd4ab70db7daf2c8fc5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 928646b0dc3b6c949bfc66d9ff111140, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 817a3c4789e0036469fad98e57b65c5f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d3645315f307f9143a450d36b5e8a2fc, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 31a42795c67244a459edfb70c2c97664, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e4f5c22b80a35ca4c9721fe1e5559364, type: 2}
