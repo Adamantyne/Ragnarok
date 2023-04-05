@@ -355,7 +355,7 @@ MonoBehaviour:
   Level: 1
   VidaAtual: 100
   VidaMaxima: 100
-  poderAtaque: 10
+  poderAtaque: 5
   alcanceAtaque: 1.6
   barraVida: {fileID: 4449797375255138673}
   CanvaUI: {fileID: 7044380331694922741}

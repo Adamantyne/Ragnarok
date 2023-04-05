@@ -248,16 +248,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nomeInimgo: Mino
   moveSpeed: 1
-  vidaAtual: 20
-  vidaMaxima: 20
+  vidaAtual: 200
+  vidaMaxima: 200
   Level: 10
   distAgro: 6
-  alcanceAtaque: 1.5
+  alcanceAtaque: 3
   tempoProcurarJogador: 0.2
   Morto: 0
-  inimigoID: 0
-  poderAtaque: 1
-  tempoEntreAtaques: 1
+  inimigoID: 1
+  poderAtaque: 20
+  tempoEntreAtaques: 3
   nomeInimigoTXT: {fileID: 4497335045200341325}
   levelInimigoTXT: {fileID: 4800762560908650197}
   sr: {fileID: 1067181657844035864}

@@ -248,16 +248,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nomeInimgo: Esqueleto
   moveSpeed: 3
-  vidaAtual: 50
-  vidaMaxima: 50
+  vidaAtual: 100
+  vidaMaxima: 100
   Level: 10
   distAgro: 6
-  alcanceAtaque: 1.5
+  alcanceAtaque: 2
   tempoProcurarJogador: 0.2
   Morto: 0
   inimigoID: 2
   poderAtaque: 5
-  tempoEntreAtaques: 2
+  tempoEntreAtaques: 1.5
   nomeInimigoTXT: {fileID: 3538846041126904429}
   levelInimigoTXT: {fileID: 5614444753992691189}
   sr: {fileID: 3969407727057686715}
