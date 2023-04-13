@@ -250,7 +250,7 @@ MonoBehaviour:
   moveSpeed: 1
   vidaAtual: 200
   vidaMaxima: 200
-  Level: 10
+  Level: 20
   distAgro: 6
   alcanceAtaque: 3
   tempoProcurarJogador: 0.2

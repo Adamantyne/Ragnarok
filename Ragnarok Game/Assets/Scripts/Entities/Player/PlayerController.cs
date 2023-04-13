@@ -139,7 +139,6 @@ public class PlayerController : MonoBehaviourPun
     public void Evoluir()
     {
         this.Level += 1;
-        Debug.Log(Level);
         LevelJogadorTxt.text = "Lv "+this.Level.ToString();
     }
 

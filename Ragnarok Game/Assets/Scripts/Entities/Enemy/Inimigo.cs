@@ -204,13 +204,13 @@ public List<GameObject> ObjetoSoltarMorte;
     [PunRPC]
     public void MorteRede()
     {
-        JogadorAlvo.GanharXp(this.Level);
         StartCoroutine("Morte");
     }
 
     	IEnumerator Morte ()
     {
         Morto = true;
+        JogadorAlvo.GanharXp(this.Level);
         corpoInimigo.isKinematic = true;
         GetComponent<CapsuleCollider2D>().enabled = false;
         yield return new WaitForSeconds(0.5f);
